@@ -18,19 +18,6 @@ int Source::WindowInit()
 	if (!glfwInit()) {
 		return -1;
 	}
-	
-	float positions[]{
-		-0.5f, -0.5f,
-		0.5f, -0.5f,
-		0.5f, 0.5f,
-		-0.5f, 0.5f
-	};
-
-	unsigned int Vertices[]{
-		0, 1, 2,
-		2, 3, 0
-		
-	};
 
 	window = glfwCreateWindow(640,480, "RTGC", NULL, NULL);
 	if (!window)	
@@ -48,29 +35,27 @@ int Source::WindowInit()
 	}
 
 
-	unsigned int bufferOne;
-	glGenBuffers(1, &bufferOne);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferOne);
-	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), positions, GL_STATIC_DRAW);
+	Object* a = new Object();
 
+	glGenVertexArrays(1, &a->vao);
+	glBindVertexArray(a->vao);
+
+	glGenBuffers(1, &a->vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, a->vbo);
+	glBufferData(GL_ARRAY_BUFFER, a->vertexData.size() * sizeof(float), a->vertexData.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-
-	unsigned int ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Vertices, GL_STATIC_DRAW);
-
-
-
-
+	
+	glGenBuffers(1, &a->ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, a->ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, a->indexData.size() * sizeof(unsigned int), a->indexData.data(), GL_STATIC_DRAW);
 	
 	while (!glfwWindowShouldClose(window)) 
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
-
 		
+		glBindVertexArray(a->vao);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
