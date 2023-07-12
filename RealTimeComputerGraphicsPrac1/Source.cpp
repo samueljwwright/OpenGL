@@ -60,8 +60,8 @@ int Source::WindowInit()
 
 	//Setup VAO, VBO association
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-	
+	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 	//ARGS FOR ABOVE {VBO,VAO,IBO, VERTEX DATA & SIZE, INDEX DATA & SIZE, {GLPARAMS} = KEEP CONSTANT}
 
 
@@ -135,14 +135,14 @@ int Source::WindowInit()
 		
 
 		glBindVertexArray(a->vao);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, a->indexData.size(), GL_UNSIGNED_INT, nullptr);
 
 		/// <summary>
 		/// Rotation test
 		/// </summary>
 		/// <returns></returns>
 		glm::mat4 model_mat = glm::mat4(1.0f);
-		model_mat = glm::rotate(model_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+		model_mat = glm::rotate(model_mat, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 		unsigned int model_mat_location = glGetUniformLocation(shaderProgram, "model_matrix");
 		glUniformMatrix4fv(model_mat_location, 1, GL_FALSE, &model_mat[0][0]); //Last arg provides pointer to first element of the mat (glm::value_ptr not available)
 
