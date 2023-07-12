@@ -3,6 +3,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+
+
 #include <string>
 
 int main() 
@@ -68,10 +73,12 @@ int Source::WindowInit()
 			#version 330 core
 
 			layout(location = 0) in vec4 position;			
-
+			
+			uniform mat4 model_matrix;
+			
 			void main()
 			{
-				gl_Position = position;
+				gl_Position = position * model_matrix; 
 			}
 		)";
 
@@ -87,17 +94,35 @@ int Source::WindowInit()
 			}
 		)";
 
+	//VERTEX SHADER COMPILE
+	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
+	const char* vsPointer = vertexShaderStandard.c_str();
+	glShaderSource(vs, 1, &vsPointer, nullptr);
+	glCompileShader(vs);
 
+
+
+	//FRAGMENT SHADER COMPILE
 	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
 	const char* fsPointer = fragmentShaderStandard.c_str();
 	glShaderSource(fs, 1, &fsPointer, nullptr);
 	glCompileShader(fs);
 
+
+	//Shader Program
 	unsigned int shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, fs);
+
+	glAttachShader(shaderProgram, vs); //Attach Vertex shader
+	glAttachShader(shaderProgram, fs); //Attach Fragment shader
+
 	glLinkProgram(shaderProgram);
 
 	glUseProgram(shaderProgram);
+
+
+
+	///
+
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0); //FOR TESTING VAO (WORKING AS OF NOW)
@@ -111,6 +136,23 @@ int Source::WindowInit()
 
 		glBindVertexArray(a->vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+		/// <summary>
+		/// Rotation test
+		/// </summary>
+		/// <returns></returns>
+		glm::mat4 model_mat = glm::mat4(1.0f);
+		model_mat = glm::rotate(model_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+		unsigned int model_mat_location = glGetUniformLocation(shaderProgram, "model_matrix");
+		glUniformMatrix4fv(model_mat_location, 1, GL_FALSE, &model_mat[0][0]); //Last arg provides pointer to first element of the mat (glm::value_ptr not available)
+
+
+
+
+
+
+
+
 
 		glfwSwapBuffers(window);
 
