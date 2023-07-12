@@ -53,6 +53,7 @@ int Source::WindowInit()
 	glBindBuffer(GL_ARRAY_BUFFER, a->vbo);
 	glBufferData(GL_ARRAY_BUFFER, a->vertexData.size() * sizeof(float), a->vertexData.data(), GL_STATIC_DRAW);
 	
+	
 	//Generate IBO
 	glGenBuffers(1, &a->ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, a->ibo);
@@ -63,7 +64,8 @@ int Source::WindowInit()
 	//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 	//ARGS FOR ABOVE {VBO,VAO,IBO, VERTEX DATA & SIZE, INDEX DATA & SIZE, {GLPARAMS} = KEEP CONSTANT}
-
+	//glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(sizeof(float) * 3));
 
 	//SHADERS TO BE MOVED TO RESOURCE FOLDERS
 
