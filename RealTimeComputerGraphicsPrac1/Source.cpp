@@ -1,14 +1,13 @@
-	#include "Source.h"
-	#include <iostream>
-	#include <GL/glew.h>
-	#include <GLFW/glfw3.h>
+#include "Source.h"
+#include <iostream>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-	#include <glm/glm.hpp>
-	#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <string>
 
-
-
-	#include <string>
+#include "Shader.h"
 
 	int main() 
 	{
@@ -108,7 +107,7 @@
 		glShaderSource(vs, 1, &vsPointer, nullptr);
 		glCompileShader(vs);
 
-
+		//take uint type gl_vertex_shader , const std::string& pathname /(vertexshaderstandard) , return vs
 
 		//FRAGMENT SHADER COMPILE
 		unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
@@ -126,6 +125,14 @@
 		glLinkProgram(shaderProgram);
 
 		glUseProgram(shaderProgram);
+
+
+		Shader s;
+		std::string sd = "Standard_VertexShader";
+		s.CompileShader(GL_VERTEX_SHADER, sd);
+
+
+
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //FOR TESTING VAO (WORKING AS OF NOW)
