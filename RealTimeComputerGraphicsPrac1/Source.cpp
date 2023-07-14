@@ -67,49 +67,15 @@
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
 
-
-		//shaders written as strings to allow for ease of formatting (using R e.t.c)
-		std::string vertexShaderStandard =
-			R"(
-				#version 330 core
-
-				layout(location = 0) in vec4 position;
-				layout(location = 1) in vec3 color; // Added color attribute
-
-				uniform mat4 model_matrix;
-
-				out vec3 vertexColor; // Output color to fragment shader
-
-				void main()
-				{
-					gl_Position = position * model_matrix;
-					vertexColor = color; // Pass color to fragment shader
-				}
-			)";
-
-		std::string fragmentShaderStandard =
-			R"(
-				#version 330 core
-
-				layout(location = 0) out vec4 fragColor;
-
-				in vec3 vertexColor; // Input color from vertex shader
-
-				void main()
-				{
-					fragColor = vec4(vertexColor, 1.0);
-				}
-			)";
-
+		//SHADERS
 		Shader s;
 		std::string VertexShaderPath = "Standard_VertexShader";
 		std::string FragmentShaderPath = "Standard_FragmentShader";
 
-		//VERTEX SHADER COMPILE
+		//Compile shaders
 		unsigned int vs = s.CompileShader(GL_VERTEX_SHADER, VertexShaderPath);
 
 		unsigned int fs = s.CompileShader(GL_FRAGMENT_SHADER, FragmentShaderPath);
-
 
 		//Shader Program
 		unsigned int shaderProgram = glCreateProgram();
@@ -118,9 +84,10 @@
 		glAttachShader(shaderProgram, fs); //Attach Fragment shader
 
 		glLinkProgram(shaderProgram);
-
 		glUseProgram(shaderProgram);
 
+
+		//Clear buffers
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //FOR TESTING VAO (WORKING AS OF NOW)
 		glBindVertexArray(0);			  //
