@@ -7,30 +7,28 @@ unsigned int Shader::CompileShader (unsigned int shaderType, const std::string& 
 {
 	 
 	//Import Shader from file
-	std::ifstream ShaderFile("Shaders/" + filePathName + ".txt"); //Might need to cast to std::string
+	std::ifstream ShaderFile("Shaders/" + filePathName + ".txt"); 
 	if (ShaderFile.is_open()) 
 	{
-		parseShader(ShaderFile);
+		std::string parsedShader = parseShader(ShaderFile); 
+		const char* shaderCharptr = parsedShader.c_str();
+
+		unsigned int shaderID = glCreateShader(shaderType); 
+
+		glShaderSource(shaderID, 1, &shaderCharptr, nullptr);
+		glCompileShader(shaderID);
+		return shaderID;
 	}
 	else 
 	{
 		std::cout << "Shader file has not been opened " << std::endl;
 
 	}
-	
 
-
-
-	//compileShader
-
-	unsigned int shaderID = glCreateShader(shaderType);
-	//const char* ShaderPointer = vertexShaderStandard.c_str();
-	//glShaderSource(shaderID, 1, &shaderPointer, nullptr);
-	glCompileShader(shaderID);
-	return shaderID;
+	return 0;
 }
 
-const char* Shader::parseShader(std::ifstream& file) 
+std::string Shader::parseShader(std::ifstream& file) 
 {
 	std::string shaderString;
 	std::string l;
@@ -38,10 +36,8 @@ const char* Shader::parseShader(std::ifstream& file)
 	{
 		shaderString.append(l + "\n");
 	}
-
-	const char *shaderCharptr = shaderString.c_str();
-	std::cout << shaderCharptr;
-	return shaderCharptr;
+	//std::cout << shaderCharptr;
+	return shaderString;
 }
 
 

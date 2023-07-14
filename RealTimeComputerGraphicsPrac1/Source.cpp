@@ -101,19 +101,14 @@
 				}
 			)";
 
+		Shader s;
+		std::string VertexShaderPath = "Standard_VertexShader";
+		std::string FragmentShaderPath = "Standard_FragmentShader";
+
 		//VERTEX SHADER COMPILE
-		unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
-		const char* vsPointer = vertexShaderStandard.c_str();
-		glShaderSource(vs, 1, &vsPointer, nullptr);
-		glCompileShader(vs);
+		unsigned int vs = s.CompileShader(GL_VERTEX_SHADER, VertexShaderPath);
 
-		//take uint type gl_vertex_shader , const std::string& pathname /(vertexshaderstandard) , return vs
-
-		//FRAGMENT SHADER COMPILE
-		unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
-		const char* fsPointer = fragmentShaderStandard.c_str();
-		glShaderSource(fs, 1, &fsPointer, nullptr);
-		glCompileShader(fs);
+		unsigned int fs = s.CompileShader(GL_FRAGMENT_SHADER, FragmentShaderPath);
 
 
 		//Shader Program
@@ -125,14 +120,6 @@
 		glLinkProgram(shaderProgram);
 
 		glUseProgram(shaderProgram);
-
-
-		Shader s;
-		std::string sd = "Standard_VertexShader";
-		s.CompileShader(GL_VERTEX_SHADER, sd);
-
-
-
 
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); //FOR TESTING VAO (WORKING AS OF NOW)

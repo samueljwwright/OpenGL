@@ -10,7 +10,7 @@ class Shader
 {
 public:
 	unsigned int CompileShader(unsigned int shaderType, const std::string& filePathName);
-	const char* parseShader(std::ifstream& file);
+    std::string parseShader(std::ifstream& file);
 };
 
 #endif 
