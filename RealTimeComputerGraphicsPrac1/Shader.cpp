@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-#include <filesystem>
+#include <filesystem> //remove if not used later
 
 
 unsigned int Shader::CompileShader (unsigned int shaderType, const std::string& filePathName)
@@ -24,7 +24,7 @@ unsigned int Shader::CompileShader (unsigned int shaderType, const std::string& 
 		std::cout << "Shader file has not been opened " << std::endl;
 
 	}
-
+	ShaderFile.close();
 	return 0;
 }
 

@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Shader.h"
+#include "ObjLoader.h"
 
 	int main() 
 	{
@@ -39,6 +40,14 @@
 		if (glewError != GLEW_OK) {
 			std::cout << "glew error" << std::endl;
 		}
+
+		//////////////////////////////////////////////////////////////
+		ObjLoader loader;
+		loader.LoadObjectVertexData("Cube");
+
+
+
+		/// /////////////////////////////////////////
 
 
 		Object* a = new Object();
