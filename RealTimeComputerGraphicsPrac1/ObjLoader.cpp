@@ -32,7 +32,9 @@ std::vector<float> ObjLoader::LoadObjectVertexData(const std::string& filePathNa
 
 std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
 {
-	char v = 'v';
+	//Prefixes
+	char v = 'v'; //vec pos
+	char f = 'f'; //face
 
 	std::string l;
 	while (std::getline(file,l)) 
@@ -49,8 +51,26 @@ std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
 				std::cout << value << std::endl;
 			}
 		}
-		else {
-			std::cout << "not v" << std::endl;
+		else if(l[0] == f)
+		{
+			std::istringstream stream(l);
+			//float value;
+			stream >> f; //skips the prefix
+			//stream.ignore(sl);
+
+			unsigned int VertexPosition, TexCoord, Normal;
+			char slashOne, slashTwo;
+
+			while (stream >> VertexPosition >> slashOne >> TexCoord >> slashTwo >> Normal)
+			{
+				std::cout << "vPos: " << VertexPosition << " ";
+				std::cout << "TexCoord: " << TexCoord << " ";
+				std::cout << "Normal: " << Normal <<std::endl;
+			}
+		}
+		else 
+		{
+			std::cout << "different data" << std::endl;
 		}
 	}
 
