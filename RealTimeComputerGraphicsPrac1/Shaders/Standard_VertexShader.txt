@@ -4,11 +4,13 @@ layout(location = 0) in vec4 position;
 layout(location = 1) in vec3 color; // Added color attribute
 
 uniform mat4 model_matrix;
+uniform mat4 view_matrix;
+uniform mat4 pro_matrix;
 
 out vec3 vertexColor; // Output color to fragment shader
 
 void main()
 {
-	gl_Position = position * model_matrix;
+	gl_Position = position * model_matrix;// * view_matrix * pro_matrix;
 	vertexColor = color; // Pass color to fragment shader
 }

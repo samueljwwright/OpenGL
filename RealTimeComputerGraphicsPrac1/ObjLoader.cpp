@@ -1,37 +1,30 @@
 #include "ObjLoader.h"
 
 
-//object loader method
+//remove only for testing
+#include <glm/glm.hpp>
 
-//vertex position loading :: 
-//if(linestart "v") skip "v" and " " pull all untill " " repeat 2 more times to get all 3 values add all to vertexdata array
-//
-//face data (index data) loading :: 
-//if(linestart "f") skip "v" and " " get next
 
-std::vector<float> ObjLoader::LoadObjectVertexData(const std::string& filePathName)
+objData ObjLoader::LoadObjectVertexData(const std::string& filePathName)
 {
-	std::vector<float> a;
+	objData ObjectData;
 
 	std::ifstream ObjectFile(filePathName + ".obj");
 	if (ObjectFile.is_open()) {
 		std::cout << "object file opened" << std::endl;
-		parseObjectData(ObjectFile);
+		ObjectData = parseObjectData(ObjectFile);
 	}
 	else 
 	{
 		std::cout << "Object failed to load" << std::endl;
 	}
-
-
-
-
-
-	return a;
+	return ObjectData;
+	
 }
 
-std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
+objData ObjLoader::parseObjectData(std::ifstream& file)
 {
+	objData objectData;
 	//Prefixes
 	char v = 'v'; //vec pos
 	char f = 'f'; //face
@@ -40,14 +33,13 @@ std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
 	while (std::getline(file,l)) 
 	{
 		if (l[0] == v && l[1] == ' ') 
-		{
-			std::cout << l << std::endl;
-			
+		{			
 			std::istringstream stream(l);
 			float value;
 			stream >> v; //skips the prefix
 			while (stream >> value) 
 			{
+				objectData.vertexData.push_back(value);
 				std::cout << value << std::endl;
 			}
 		}
@@ -63,11 +55,14 @@ std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
 
 			while (stream >> VertexPosition >> slashOne >> TexCoord >> slashTwo >> Normal)
 			{
+				objectData.Positionindex.push_back(VertexPosition - 1); // -1 BECAUSE OBJ FILES START INDEX AT 1 INSTEAD OF 0!
 				std::cout << "vPos: " << VertexPosition << " ";
+				objectData.textureIndex.push_back(TexCoord);
 				std::cout << "TexCoord: " << TexCoord << " ";
+				objectData.normalIndex.push_back(Normal);
 				std::cout << "Normal: " << Normal <<std::endl;
 			}
-		}
+		} //ELSE IF FOR OTHER DATA (NORMALS TEXTURES)
 		else 
 		{
 			std::cout << "different data" << std::endl;
@@ -76,10 +71,6 @@ std::vector<float> ObjLoader::parseObjectData(std::ifstream& file)
 
 
 
-	std::vector<float> values;
-	
-
-
-	return values;
+	return objectData;
 }
 

@@ -14,7 +14,6 @@
 	{
 		Source source;
 		source.WindowInit();
-	
 		return 0;
 	}
 
@@ -42,15 +41,19 @@
 		}
 
 		//////////////////////////////////////////////////////////////
-		ObjLoader loader;
-		loader.LoadObjectVertexData("Cube");
-
-
-
-		/// /////////////////////////////////////////
-
-
+		
+		
 		Object* a = new Object();
+		
+		ObjLoader loader;
+		objData b = loader.LoadObjectVertexData("Monk");
+
+		a->indexData = b.Positionindex;
+		a->vertexData = b.vertexData;
+
+		for (int i = 0; i < b.Positionindex.size(); i++) {
+			std::cout << " p : " << b.Positionindex[i] << "; " << std::endl;
+		}
 
 		//Generate VAO
 		glGenVertexArrays(1, &a->vao);
@@ -71,10 +74,10 @@
 
 		//POS
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0); // change size to 6 for default cube
 		//COL
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
+		//glEnableVertexAttribArray(1); //For default cube 
+		//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void*)(sizeof(float) * 3));
 
 		//SHADERS
 		Shader s;
@@ -102,20 +105,33 @@
 		glBindVertexArray(0);			  //
 										  //
 
+
+
+
+
+		glDisable(GL_CULL_FACE);
+
 		while (!glfwWindowShouldClose(window)) 
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
-		
+			glClear(GL_DEPTH_BUFFER_BIT);
 
 			glBindVertexArray(a->vao);
 			glDrawElements(GL_TRIANGLES, a->indexData.size(), GL_UNSIGNED_INT, nullptr);
+
+
 			
+
 			//Rotation for debugging
 			glm::mat4 model_mat = glm::mat4(1.0f);
-			model_mat = glm::rotate(model_mat, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
+			model_mat = glm::rotate(model_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+			
+
+			
 			unsigned int model_mat_location = glGetUniformLocation(shaderProgram, "model_matrix");
 			glUniformMatrix4fv(model_mat_location, 1, GL_FALSE, &model_mat[0][0]); //Last arg provides pointer to first element of the mat (glm::value_ptr not available)
 
+			
 			glfwSwapBuffers(window);
 
 			glfwPollEvents();

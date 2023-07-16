@@ -10,16 +10,20 @@
 struct objData 
 {
 	std::vector<float> vertexData;
-	std::vector<unsigned int> indexData;
+	std::vector<float> textureData;
+	std::vector<float> normalData;
+	std::vector<unsigned int> Positionindex;
+	std::vector<unsigned int> textureIndex;
+	std::vector<unsigned int> normalIndex;
 };
 
 
 class ObjLoader	
 {
 public:
-	std::vector<float> LoadObjectVertexData(const std::string& filePathName);
+	objData LoadObjectVertexData(const std::string& filePathName);
 private:
-	std::vector<float> parseObjectData(std::ifstream& file);
+	objData parseObjectData(std::ifstream& file);
 };
 
 #endif // !1
