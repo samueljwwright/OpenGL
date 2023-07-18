@@ -45,7 +45,7 @@ int Source::WindowInit()
     Object* a = new Object();
 
     ObjLoader loader;
-    objData b = loader.LoadObjectVertexData("Cube");
+    objData b = loader.LoadObjectVertexData("monk");
 
     a->indexData = b.Positionindex;
     a->vertexData = b.vertexData;
@@ -69,10 +69,10 @@ int Source::WindowInit()
 
     //POS
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0); // change size to 6 for default cube
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0); // change size to 6 for default cube
     //COL
-    //glEnableVertexAttribArray(1); //For default cube 
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
+    glEnableVertexAttribArray(1); //For default cube 
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
 
     //SHADERS
     Shader s;

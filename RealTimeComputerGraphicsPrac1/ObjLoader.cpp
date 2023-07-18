@@ -4,6 +4,7 @@
 //remove only for testing
 #include <glm/glm.hpp>
 
+#include <ctime> // remove after testing random colors
 
 objData ObjLoader::LoadObjectVertexData(const std::string& filePathName)
 {
@@ -11,6 +12,7 @@ objData ObjLoader::LoadObjectVertexData(const std::string& filePathName)
 
 	std::ifstream ObjectFile(filePathName + ".obj");
 	if (ObjectFile.is_open()) {
+		srand(static_cast<unsigned int>(time(nullptr))); ///////remove after testing random colors
 		std::cout << "object file opened" << std::endl;
 		ObjectData = parseObjectData(ObjectFile);
 	}
@@ -42,6 +44,10 @@ objData ObjLoader::parseObjectData(std::ifstream& file)
 				objectData.vertexData.push_back(value);
 				std::cout << value << std::endl;
 			}
+
+			objectData.vertexData.push_back((float)rand() / (RAND_MAX)); // For random vertex color values
+			objectData.vertexData.push_back((float)rand() / (RAND_MAX));
+			objectData.vertexData.push_back((float)rand() / (RAND_MAX));
 		}
 		else if(l[0] == f)
 		{
