@@ -9,6 +9,7 @@
 
 #include "Shader.h"
 #include "ObjLoader.h"
+#include "Texture.h"
 
 int main()
 {
@@ -45,10 +46,10 @@ int Source::WindowInit()
     Object* a = new Object();
 
     ObjLoader loader;
-    objData b = loader.LoadObjectVertexData("monk");
+    objData b = loader.LoadObjectVertexData("Cube");
 
-    a->indexData = b.Positionindex;
-    a->vertexData = b.vertexData;
+    a->indexData = b.indices;
+    a->vertexData = b.combinedData;
 
     //Generate VAO
     glGenVertexArrays(1, &a->vao);
@@ -69,10 +70,10 @@ int Source::WindowInit()
 
     //POS
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, 0); // change size to 6 for default cube
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // change size to 6 for default cube
     //COL
     glEnableVertexAttribArray(1); //For default cube 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void*)(sizeof(float) * 3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
 
     //SHADERS
     Shader s;
@@ -92,6 +93,31 @@ int Source::WindowInit()
 
     glLinkProgram(shaderProgram);
     glUseProgram(shaderProgram);
+
+    //Textures
+    Texture texture;
+    texture.CreateTexture("test.png");
+
+
+    unsigned int texID;
+
+    glActiveTexture(GL_TEXTURE0);
+
+    glGenTextures(1, &texID);
+    glBindTexture(GL_TEXTURE_2D, texID);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.textureData);
+
+    glEnable(GL_TEXTURE_2D);
+
+
+
 
     // VIEW MAT
     glm::mat4 viewMatrix = glm::lookAt(
@@ -134,6 +160,12 @@ int Source::WindowInit()
 
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
         glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrix[0][0]);
+
+        //texture
+
+        unsigned int texLocation = glGetUniformLocation(shaderProgram, "tex");
+        glUniform1i(texLocation, 0);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();

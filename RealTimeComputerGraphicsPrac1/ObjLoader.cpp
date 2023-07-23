@@ -2,7 +2,7 @@
 
 
 //remove only for testing
-#include <glm/glm.hpp>
+
 
 #include <ctime> // remove after testing random colors
 
@@ -26,57 +26,104 @@ objData ObjLoader::LoadObjectVertexData(const std::string& filePathName)
 
 objData ObjLoader::parseObjectData(std::ifstream& file)
 {
-	objData objectData;
-	//Prefixes
-	char v = 'v'; //vec pos
-	char f = 'f'; //face
+    objData objectData;
+    // Prefixes
+    char v = 'v'; // vec pos
+    char f = 'f'; // face
+    char vt = 'vt';
 
-	std::string l;
-	while (std::getline(file,l)) 
-	{
-		if (l[0] == v && l[1] == ' ') 
-		{			
-			std::istringstream stream(l);
-			float value;
-			stream >> v; //skips the prefix
-			while (stream >> value) 
-			{
-				objectData.vertexData.push_back(value);
-				std::cout << value << std::endl;
-			}
+    std::string l;
+    while (std::getline(file, l))
+    {
+        std::istringstream stream(l);
+        if (l[0] == v && l[1] == ' ')
+        {
 
-			objectData.vertexData.push_back((float)rand() / (RAND_MAX)); // For random vertex color values
-			objectData.vertexData.push_back((float)rand() / (RAND_MAX));
-			objectData.vertexData.push_back((float)rand() / (RAND_MAX));
-		}
-		else if(l[0] == f)
-		{
-			std::istringstream stream(l);
-			//float value;
-			stream >> f; //skips the prefix
-			//stream.ignore(sl);
+            float value;
+            stream >> v; // skips the prefix
+            while (stream >> value)
+            {
+                objectData.vertexData.push_back(value);
+                std::cout << value << std::endl;
+            }
+        }
+        else if (l[0] == f)
+        {
+            std::istringstream stream(l);
+            stream >> f; // skips the prefix
 
-			unsigned int VertexPosition, TexCoord, Normal;
-			char slashOne, slashTwo;
+            unsigned int VertexPositionIndex, TexCoordIndex, NormalIndex;
+            char slashOne, slashTwo;
 
-			while (stream >> VertexPosition >> slashOne >> TexCoord >> slashTwo >> Normal)
-			{
-				objectData.Positionindex.push_back(VertexPosition - 1); // -1 BECAUSE OBJ FILES START INDEX AT 1 INSTEAD OF 0!
-				std::cout << "vPos: " << VertexPosition << " ";
-				objectData.textureIndex.push_back(TexCoord);
-				std::cout << "TexCoord: " << TexCoord << " ";
-				objectData.normalIndex.push_back(Normal);
-				std::cout << "Normal: " << Normal <<std::endl;
-			}
-		} //ELSE IF FOR OTHER DATA (NORMALS TEXTURES)
-		else 
-		{
-			std::cout << "different data" << std::endl;
-		}
-	}
+            while (stream >> VertexPositionIndex >> slashOne >> TexCoordIndex >> slashTwo >> NormalIndex)
+            {
+                objectData.Positionindex.push_back(VertexPositionIndex - 1); // -1 BECAUSE OBJ FILES START INDEX AT 1 INSTEAD OF 0!
+                objectData.textureIndex.push_back(TexCoordIndex - 1);
+                objectData.normalIndex.push_back(NormalIndex);
+            }
+        }
+        else if (l[0] == v && l[1] == 't')
+        {
+
+            //Messy change the streaming of vt twice!
+            stream >> vt;
+            stream >> vt;
+            glm::vec2 TextureUV;
+            stream >> TextureUV.x >> TextureUV.y;
+            objectData.textureData.push_back(TextureUV.x);
+            objectData.textureData.push_back(TextureUV.y);
+            std::cout << TextureUV.x << " this te" << std::endl;
+        }
+        else
+        {
+            // Implement normals condition later
+        }
+    }
+
+    // Create combined vertex data
+    for (size_t i = 0; i < objectData.Positionindex.size(); i++)
+    {
+        int posIndex = objectData.Positionindex[i];
+        int texCoordIndex = objectData.textureIndex[i];
+
+        glm::vec3 position;
+        glm::vec2 texCoord;
+        
+        //Positions
+        position.x = objectData.vertexData[posIndex * 3];       // will always be 3 for postions
+        position.y = objectData.vertexData[posIndex * 3 + 1];
+        position.z = objectData.vertexData[posIndex * 3 + 2];
+        //TexCoords
+        texCoord.x = objectData.textureData[texCoordIndex * 2]; //will always be 2 for tex coords (normals will follow the same when added)
+        texCoord.y = objectData.textureData[texCoordIndex * 2 + 1];
+
+        //Push all data to combined vec
+        objectData.combinedData.push_back(position.x);
+        objectData.combinedData.push_back(position.y);
+        objectData.combinedData.push_back(position.z);
+        objectData.combinedData.push_back(texCoord.x);
+        objectData.combinedData.push_back(texCoord.y);
+    }
+
+    //push all index to vector
+    for (int i = 0; i < objectData.Positionindex.size(); i += 3)
+    {
+        objectData.indices.push_back(i);
+        objectData.indices.push_back(i + 1);
+        objectData.indices.push_back(i + 2);
+    }
+
+    for (int i = 0; i < objectData.indices.size(); i++) {
+        std::cout << objectData.indices[i] << std::endl;
+    }
+
+    return objectData;
+}
 
 
-
-	return objectData;
+void ObjLoader::CombineObjectData() {
+	//get pos index
+	//get tex index
+	//object data vector . pushback (vert pos of pos index and corresponding tex data) if this vertex does not exist
 }
 
