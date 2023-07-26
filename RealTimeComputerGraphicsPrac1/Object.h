@@ -13,6 +13,11 @@ public:
 	unsigned int vao, vbo, ibo;
 	std::vector<float> vertexData;
 	std::vector<unsigned int> indexData;
+
+	void CreateVertexBuffer();
+	void CreateIndexBuffer();
+
+	void bindBuffer();
 };
 
 #endif 

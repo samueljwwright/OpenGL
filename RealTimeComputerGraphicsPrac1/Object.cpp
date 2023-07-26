@@ -1,42 +1,32 @@
 #include "Object.h"
+#include <GL/glew.h>
 
 Object::Object() {
+    vbo = 0;
+    ibo = 0;
+}
 
-    vertexData = {
-        // Front
-        -0.5f, -0.5f, 0.5f,   1.0f, 0.0f, 0.0f,  
-        0.5f, -0.5f, 0.5f,    1.0f, 0.0f, 0.0f,  
-        0.5f, 0.5f, 0.5f,     1.0f, 0.0f, 0.0f,  
-        -0.5f, 0.5f, 0.5f,    1.0f, 0.0f, 0.0f,  
+//call after vertex data has been added
+void Object::CreateVertexBuffer() 
+{
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(float), vertexData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
 
-        //Back 
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,  
-        0.5f, -0.5f, -0.5f,   0.0f, 1.0f, 1.0f,  
-        0.5f, 0.5f, -0.5f,    0.5f, 0.5f, 0.5f,  
-        -0.5f, 0.5f, -0.5f,   0.7f, 0.3f, 0.9f,  
-    };
+void Object::bindBuffer() 
+{
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    indexData = {
-        // Front 
-        0, 1, 2,
-        2, 3, 0,
-        // Right 
-        1, 5, 6,
-        1, 6, 2,
-        // Top 
-        3, 2, 6,
-        3, 6, 7,
-        // Bottom 
-        0, 4, 5,
-        0, 5, 1,
-        // Back 
-        4, 7, 6,
-        4, 6, 5,
-        // Left 
-        0, 3, 7,
-        0, 7, 4,
-    };
+}
 
-
-
+void Object::CreateIndexBuffer() 
+{
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size() * sizeof(unsigned int), indexData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
