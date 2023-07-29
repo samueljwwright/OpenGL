@@ -131,13 +131,12 @@ int Source::WindowInit()
 
     glUniform4f(glGetUniformLocation(shaderProgram, "lightColour"), light.lightColour.x, light.lightColour.y, light.lightColour.z, light.lightColour.w);
     glUniform3f(glGetUniformLocation(shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
-    //glm::vec4 lightPositionObjectSpace = glm::inverse(a->transform) * glm::vec4(light.lightPosition);
 
-    // Pass the transformed light position to the shader
-    //glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, &lightPositionObjectSpace[0]);
-
+    glUniform3f(glGetUniformLocation(shaderProgram, "camPosition"), viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2]);
     
-
+    //std::cout<< viewMatrix[3][0] << viewMatrix[3][1] << viewMatrix[3][2] << std::endl;
+    
+    
 
 
     while (!glfwWindowShouldClose(window))
