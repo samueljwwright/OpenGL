@@ -118,6 +118,28 @@ int Source::WindowInit()
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
+
+    //Lighting
+    struct DirectionalLight {
+        glm::vec4 lightColour = { 0.0f, 1.0f, 1.0f, 1.0f };
+        glm::vec4 lightPosition = { 0.0f, -2.0f, 0.0f, 1.0f };
+    };
+    DirectionalLight light;
+    //std::cout << light.lightPosition.x;   `
+    //glm::vec4 l = glm::normalize(light.lightPosition);
+    //std::cout << l.x;
+
+    glUniform4f(glGetUniformLocation(shaderProgram, "lightColour"), light.lightColour.x, light.lightColour.y, light.lightColour.z, light.lightColour.w);
+    glUniform3f(glGetUniformLocation(shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
+    //glm::vec4 lightPositionObjectSpace = glm::inverse(a->transform) * glm::vec4(light.lightPosition);
+
+    // Pass the transformed light position to the shader
+    //glUniform3fv(glGetUniformLocation(shaderProgram, "lightPosition"), 1, &lightPositionObjectSpace[0]);
+
+    
+
+
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
@@ -126,6 +148,7 @@ int Source::WindowInit()
 
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
 
+        //light.lightPosition.x += (.2f * (float)glfwGetTime());
 
         a->transform = glm::mat4(1.0f); // mumst be set for all objects in loop for proper transform simulations
         a->transform = glm::translate(a->transform, glm::vec3(-3.0f, 0.0f, 0.0f)); 

@@ -26,10 +26,13 @@ void Object::CreateVertexBuffer()
 
     //POS
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // change size to 6 for default cube
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, 0); // change size to 6 for default cube
     //tex
     glEnableVertexAttribArray(1); //For default cube 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 3));
+    //normals
+    glEnableVertexAttribArray(2);  
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 8, (void*)(sizeof(float) * 5));
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -41,7 +44,7 @@ void Object::bindObject()
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     texture.useTexture(TextureID); //ISSIE HERE
-    std::cout << "TEX ID::  :: " << TextureID << std::endl;
+    //std::cout << "TEX ID::  :: " << TextureID << std::endl;
     
 }
 

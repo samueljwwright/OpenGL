@@ -2,15 +2,23 @@
 
 layout(location = 0) in vec4 position;
 layout(location = 1) in vec2 texCoords;
+layout(location = 2) in vec3 normalData;
 
 uniform mat4 model_matrix;
 uniform mat4 view_matrix;
 uniform mat4 projection_matrix;
 
+out vec3 positions;
 out vec2 fragTexCoords; 
+out vec3 normals;
 
 void main()
 {
-    gl_Position = projection_matrix * view_matrix * model_matrix * position;
+    gl_Position = projection_matrix * view_matrix * model_matrix * position;    
+    
+    
+    positions = vec3(model_matrix * vec4(position)); 
     fragTexCoords = texCoords; 
+    normals = mat3(transpose(inverse(model_matrix))) * normalData;
+
 }

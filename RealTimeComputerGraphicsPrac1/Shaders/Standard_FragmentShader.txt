@@ -2,12 +2,21 @@
 
 layout(location = 0) out vec4 fragColor;
 
+in vec3 positions;
 in vec2 fragTexCoords; 
+in vec3 normals;
 
 uniform sampler2D tex;
+uniform vec4 lightColour;
+uniform vec3 lightPosition;
 
 void main()
 {
+    float lightAmbient = 0.15;
+    vec3 normal = normalize(normals);
+    vec3 lightDirection = normalize(positions - lightPosition); 
+    float lightDiffuse = max(dot(normal, lightDirection), 0.0f);
+
     vec4 t = texture(tex, fragTexCoords); 
-    fragColor = vec4(t);
+    fragColor = vec4(t) * lightColour * (lightDiffuse + lightAmbient);
 }
