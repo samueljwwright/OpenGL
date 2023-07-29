@@ -9,7 +9,6 @@
 
 #include "Shader.h"
 #include "ObjLoader.h"
-#include "Texture.h"
 
 
 
@@ -30,7 +29,7 @@ int Source::WindowInit()
         return -1;
     }
 
-    window = glfwCreateWindow(640, 480, "RTGC", NULL, NULL);
+    window = glfwCreateWindow(1080  , 720, "RTGC", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -47,7 +46,9 @@ int Source::WindowInit()
 
     //////////////////////////////////////////////////////////////
 
-    Object* a = new Object();
+    //OBJECT 1
+
+    Object* a = new Object("test.png");
 
     ObjLoader loader;
     objData b = loader.LoadObjectVertexData("Cube");
@@ -55,54 +56,27 @@ int Source::WindowInit()
     a->indexData = b.indices;
     a->vertexData = b.combinedData;
 
-    Object* c = new Object();
+    a->CreateVertexArrayObject();
+    a->CreateVertexBuffer();
+    a->CreateIndexBuffer();
+    a->bindObject();
+
+
+    //OBJECT 2
+
+    Object* c = new Object("Test2.png");
 
     objData d = loader.LoadObjectVertexData("monk");
 
     c->indexData = d.indices;
     c->vertexData = d.combinedData;
 
-    //Generate VAO
-    glGenVertexArrays(1, &a->vao);
-    glBindVertexArray(a->vao);
-
-    //Generate VBO
-    a->CreateVertexBuffer();
-    a->CreateIndexBuffer();
-    a->bindBuffer();
-
-    //POS
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // change size to 6 for default cube
-    //tex
-    glEnableVertexAttribArray(1); //For default cube 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
-    
-
-
-    glGenVertexArrays(1, &c->vao);
-    glBindVertexArray(c->vao);
-
     //second obj
+    c->CreateVertexArrayObject();
     c->CreateVertexBuffer();
     c->CreateIndexBuffer();
-    c->bindBuffer();
+    c->bindObject();
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // change size to 6 for default cube
-    //tex
-    glEnableVertexAttribArray(1); //For default cube 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
-
-
-    //Setup VAO, VBO association
-
-    //POS
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // change size to 6 for default cube
-    //tex
-    glEnableVertexAttribArray(1); //For default cube 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(sizeof(float) * 3));
 
     //SHADERS
     Shader s;
@@ -123,30 +97,6 @@ int Source::WindowInit()
     glLinkProgram(shaderProgram);
     glUseProgram(shaderProgram);
 
-    //Textures
-    Texture texture;
-    texture.CreateTexture("test.png");
-
-
-    unsigned int texID;
-
-    glActiveTexture(GL_TEXTURE0);
-
-    glGenTextures(1, &texID);
-    glBindTexture(GL_TEXTURE_2D, texID);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texture.w, texture.h, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.textureData);
-
-    glEnable(GL_TEXTURE_2D);
-
-
-
 
     // VIEW MAT
     glm::mat4 viewMatrix = glm::lookAt(
@@ -165,11 +115,6 @@ int Source::WindowInit()
     unsigned int projectionMatrixLocation = glGetUniformLocation(shaderProgram, "projection_matrix");
     glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
 
-    //Clear buffers
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0); //FOR TESTING VAO (WORKING AS OF NOW)
-    glBindVertexArray(0);              //
-
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
@@ -182,21 +127,26 @@ int Source::WindowInit()
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
 
 
-        //TODO Move object model matrix to object class and access from there....
-        glm::mat4 modelMatrixA = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 0.0f, 0.0f)); 
-        modelMatrixA = glm::rotate(modelMatrixA, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
+        a->transform = glm::mat4(1.0f); // mumst be set for all objects in loop for proper transform simulations
+        a->transform = glm::translate(a->transform, glm::vec3(-3.0f, 0.0f, 0.0f)); 
+        a->transform = glm::rotate(a->transform, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 
-        glm::mat4 modelMatrixC = glm::mat4(1.0f);
 
-        glBindVertexArray(a->vao);
+        c->transform = glm::mat4(1.0f);
+        c->transform = glm::rotate(c->transform, (float)glfwGetTime(), glm::vec3(2.0f, 2.0f, 0.0f));
+        
+
+        a->bindObject();
+
         glUseProgram(shaderProgram);
-        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrixA[0][0]);
+        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &a->transform[0][0]);
         glDrawElements(GL_TRIANGLES, a->indexData.size(), GL_UNSIGNED_INT, nullptr);
 
         
-        glBindVertexArray(c->vao);
+        c->bindObject();
+
         glUseProgram(shaderProgram);
-        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &modelMatrixC[0][0]);
+        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &c->transform[0][0]);
         glDrawElements(GL_TRIANGLES, c->indexData.size(), GL_UNSIGNED_INT, nullptr);
 
 
