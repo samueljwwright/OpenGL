@@ -11,6 +11,12 @@
 #include "ObjLoader.h"
 
 
+#include <windows.h>
+constexpr int W_KEY = 0x57;
+constexpr int S_KEY = 0x53;
+constexpr int A_KEY = 0x41;
+constexpr int D_KEY = 0x44;
+constexpr int PRESSED_BIT_FLAG = 0x8000; //determines if key is currently pressed
 
 #include <ctime>
 
@@ -66,7 +72,7 @@ int Source::WindowInit()
 
     Object* c = new Object("Test2.png");
 
-    objData d = loader.LoadObjectVertexData("monk");
+    objData d = loader.LoadObjectVertexData("Monkey2");
 
     c->indexData = d.indices;
     c->vertexData = d.combinedData;
@@ -121,8 +127,8 @@ int Source::WindowInit()
 
     //Lighting
     struct DirectionalLight {
-        glm::vec4 lightColour = { 0.0f, 1.0f, 1.0f, 1.0f };
-        glm::vec4 lightPosition = { 0.0f, -2.0f, 0.0f, 1.0f };
+        glm::vec4 lightColour = { 1.0f, 1.0f, 1.0f, 1.0f };
+        glm::vec4 lightPosition = { 2.0f, -2.0f, 2.0f, 1.0f };
     };
     DirectionalLight light;
     //std::cout << light.lightPosition.x;   `
@@ -137,7 +143,7 @@ int Source::WindowInit()
     //std::cout<< viewMatrix[3][0] << viewMatrix[3][1] << viewMatrix[3][2] << std::endl;
     
     
-
+    
 
     while (!glfwWindowShouldClose(window))
     {
@@ -147,16 +153,36 @@ int Source::WindowInit()
 
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
 
-        //light.lightPosition.x += (.2f * (float)glfwGetTime());
-
         a->transform = glm::mat4(1.0f); // mumst be set for all objects in loop for proper transform simulations
-        a->transform = glm::translate(a->transform, glm::vec3(-3.0f, 0.0f, 0.0f)); 
-        a->transform = glm::rotate(a->transform, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
+        a->transform = glm::translate(a->transform, glm::vec3(-3.0f, 0.0f, 0.0f));
+
+
+
+        if (GetKeyState(W_KEY) & PRESSED_BIT_FLAG) // w define alias for keys
+        {
+            viewMatrix[3][2] += 0.001;
+        }
+        if (GetKeyState(S_KEY) & PRESSED_BIT_FLAG) //s
+        {
+            viewMatrix[3][2] -= 0.001;
+        }
+        if (GetKeyState(A_KEY) & PRESSED_BIT_FLAG) //a
+        {
+            viewMatrix[3][0] += 0.001;
+            //viewMatrix = glm::rotate(viewMatrix, 0.01f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+        }
+        if (GetKeyState(D_KEY) & PRESSED_BIT_FLAG) //d
+        {
+            viewMatrix[3][0] -= 0.001;
+        }
+        //Needed to update camera matrix each frame
+        unsigned int viewMatrixLocation = glGetUniformLocation(shaderProgram, "view_matrix");
+        glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
 
 
         c->transform = glm::mat4(1.0f);
         c->transform = glm::rotate(c->transform, (float)glfwGetTime(), glm::vec3(2.0f, 2.0f, 0.0f));
-        
 
         a->bindObject();
 
@@ -170,6 +196,9 @@ int Source::WindowInit()
         glUseProgram(shaderProgram);
         glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &c->transform[0][0]);
         glDrawElements(GL_TRIANGLES, c->indexData.size(), GL_UNSIGNED_INT, nullptr);
+
+
+
 
 
         glfwSwapBuffers(window);
