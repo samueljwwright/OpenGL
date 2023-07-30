@@ -8,12 +8,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Texture.h"
+#include "ObjLoader.h"
 //Each object in the scene will hold a refernce to a unique vbo, vao and ibo/ebo
 
 class Object 
 {
 public: 
-	Object(std::string TexturePath);
+	Object(std::string ObjPath, std::string TexturePath);
 	~Object();
 	unsigned int vao, vbo, ibo;
 	std::vector<float> vertexData;
@@ -29,6 +30,7 @@ public:
 	void bindObject();
 
 private:
+	ObjLoader loader;
 	Texture texture;
 };
 

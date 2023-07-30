@@ -32,7 +32,7 @@ struct vertex
 class ObjLoader	
 {
 public:
-	objData LoadObjectVertexData(const std::string& filePathName);
+    objData LoadObjectVertexData(const std::string& filePathName);
 private:
 	objData parseObjectData(std::ifstream& file);
 	void CombineObjectData();

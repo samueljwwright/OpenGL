@@ -1,16 +1,23 @@
 #include "Object.h"
 
 
-Object::Object(std::string TexturePath)
+Object::Object(std::string ObjPath, std::string TexturePath)
 {
     vao = 0;
     vbo = 0;
     ibo = 0;
     transform = glm::mat4(1.0f);
 
-
-
+    
+    objData temp =  loader.LoadObjectVertexData(ObjPath);
+    vertexData = temp.combinedData;
+    indexData = temp.indices;
     texture.CreateTexture(TexturePath, TextureID);
+
+    CreateVertexArrayObject();
+    CreateVertexBuffer();
+    CreateIndexBuffer();
+    bindObject();
 }
 
 //call after vertex data has been added
