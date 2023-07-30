@@ -1,26 +1,4 @@
 #include "Source.h"
-#include <iostream>
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <string>
-
-#include "Shader.h"
-#include "ObjLoader.h"
-
-
-#include <windows.h>
-constexpr int W_KEY = 0x57;
-constexpr int S_KEY = 0x53;
-constexpr int A_KEY = 0x41;
-constexpr int D_KEY = 0x44;
-constexpr int SHIFT_KEY = 0x10;
-constexpr int SPACE_KEY = 0x20;
-constexpr int PRESSED_BIT_FLAG = 0x8000; //determines if key is currently pressed
-
-#include <ctime>
 
 int main()
 {
@@ -52,19 +30,13 @@ int Source::WindowInit()
         std::cout << "glew error" << std::endl;
     }
 
-    //////////////////////////////////////////////////////////////
-
     //OBJECT 1
 
-    Object* a = new Object("Cube", "test.png");
-
-
+    Object* a = new Object("Cube", "test.png"); //Obj file, Texture file
 
     //OBJECT 2
 
     Object* c = new Object("Monkey2", "Test2.png");
-
-
 
 
     //SHADERS
@@ -88,7 +60,7 @@ int Source::WindowInit()
 
 
     // VIEW MAT
-    glm::mat4 viewMatrix = glm::lookAt(
+    viewMatrix = glm::lookAt(
         glm::vec3(0.0f, 0.0f, -5.0f), //Position
         glm::vec3(0.0f, 0.0f, 0.0f), //Target 
         glm::vec3(0.0f, 1.0f, 0.0f)  //up vector
@@ -100,99 +72,107 @@ int Source::WindowInit()
     //PROJECTION MAT
     glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f);
 
-
     unsigned int projectionMatrixLocation = glGetUniformLocation(shaderProgram, "projection_matrix");
     glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+    //Lighting
+
+    DirectionalLight light;
+
+    glUniform4f(glGetUniformLocation(shaderProgram, "lightColour"), light.lightColour.x, light.lightColour.y, light.lightColour.z, light.lightColour.w);
+    glUniform3f(glGetUniformLocation(shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
+
 
     glDisable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
 
-    //Lighting
-    struct DirectionalLight {
-        glm::vec4 lightColour = { 1.0f, 1.0f, 1.0f, 1.0f };
-        glm::vec4 lightPosition = { 2.0f, -2.0f, 2.0f, 1.0f };
-    };
-    DirectionalLight light;
-    //std::cout << light.lightPosition.x;   `
-    //glm::vec4 l = glm::normalize(light.lightPosition);
-    //std::cout << l.x;
+    float lastFrame = (float)glfwGetTime();
 
-    glUniform4f(glGetUniformLocation(shaderProgram, "lightColour"), light.lightColour.x, light.lightColour.y, light.lightColour.z, light.lightColour.w);
-    glUniform3f(glGetUniformLocation(shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
+    setObject(a, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.f, 0.f, 4.f));
 
-    glUniform3f(glGetUniformLocation(shaderProgram, "camPosition"), viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2]);
-    
-    //std::cout<< viewMatrix[3][0] << viewMatrix[3][1] << viewMatrix[3][2] << std::endl;
-    
-    
-    
+
 
     while (!glfwWindowShouldClose(window))
     {
+        
+        float currentFrame = (float)glfwGetTime();
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_DEPTH_BUFFER_BIT);
 
+        input();
 
-        unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
+        glUseProgram(shaderProgram);
 
-        a->transform = glm::mat4(1.0f); // mumst be set for all objects in loop for proper transform simulations
-        a->transform = glm::translate(a->transform, glm::vec3(-3.0f, 0.0f, 0.0f));
-
-
-
-        if (GetKeyState(W_KEY) & PRESSED_BIT_FLAG) // w define alias for keys
-        {
-            viewMatrix[3][2] += 0.001;
-        }
-        if (GetKeyState(S_KEY) & PRESSED_BIT_FLAG) //s
-        {
-            viewMatrix[3][2] -= 0.001;
-        }
-        if (GetKeyState(A_KEY) & PRESSED_BIT_FLAG) //a
-        {
-            viewMatrix[3][0] += 0.001;
-        }
-        if (GetKeyState(D_KEY) & PRESSED_BIT_FLAG) //d
-        {
-            viewMatrix[3][0] -= 0.001;
-        }
-        if (GetKeyState(SHIFT_KEY) & PRESSED_BIT_FLAG) //d
-        {
-            viewMatrix[3][1] += 0.001;
-        }
-        if (GetKeyState(SPACE_KEY) & PRESSED_BIT_FLAG) //d
-        {
-            viewMatrix[3][1] -= 0.001;
-        }
         //Needed to update camera matrix each frame
         unsigned int viewMatrixLocation = glGetUniformLocation(shaderProgram, "view_matrix");
         glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
         glUniform3f(glGetUniformLocation(shaderProgram, "camPosition"), viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2]);
 
-        c->transform = glm::mat4(1.0f);
-        c->transform = glm::rotate(c->transform, (float)glfwGetTime(), glm::vec3(2.0f, 2.0f, 0.0f));
+
+        c->transform = glm::rotate(c->transform, deltaTime * 2, glm::vec3(2.0f, 2.0f, 0.0f));
+
+     
+        unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
 
         a->bindObject();
-
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &a->transform[0][0]);
-        glDrawElements(GL_TRIANGLES, a->indexData.size(), GL_UNSIGNED_INT, nullptr);
-
-        
+        renderObject(modelMatrixLocation, a->transform, a->indexData.size());
         c->bindObject();
-
-        glUseProgram(shaderProgram);
-        glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &c->transform[0][0]);
-        glDrawElements(GL_TRIANGLES, c->indexData.size(), GL_UNSIGNED_INT, nullptr);
-
-
-
-
+        renderObject(modelMatrixLocation, c->transform, c->indexData.size());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glfwTerminate();
     return 0;
+}
+
+void Source::input() {
+    if (GetKeyState(W_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][2] += 0.001;
+    }
+    if (GetKeyState(S_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][2] -= 0.001;
+    }
+    if (GetKeyState(A_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][0] += 0.001;
+    }
+    if (GetKeyState(D_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][0] -= 0.001;
+    }
+    if (GetKeyState(SHIFT_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][1] += 0.001;
+    }
+    if (GetKeyState(SPACE_KEY) & PRESSED_BIT_FLAG) 
+    {
+        viewMatrix[3][1] -= 0.001;
+    }
+}
+
+void Source::renderObject(unsigned int modelMatrixLocation, glm::mat4 objectTransfromReference, int indexDataSize)
+{
+    glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, &objectTransfromReference[0][0]);
+    glDrawElements(GL_TRIANGLES, indexDataSize, GL_UNSIGNED_INT, nullptr);
+}
+
+void Source::setObject(Object* object, glm::vec3 position, glm::vec3 rotation) //add scale as well
+{
+    object->transform = glm::mat4(1.0f);
+    object->transform[3][0] = position.x;
+    object->transform[3][1] = position.y;
+    object->transform[3][2] = position.z;
+
+    object->transform = glm::rotate(object->transform, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    object->transform = glm::rotate(object->transform, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    object->transform = glm::rotate(object->transform, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+
 }
