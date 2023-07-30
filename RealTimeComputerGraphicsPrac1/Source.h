@@ -37,6 +37,7 @@ private:
 	void renderObject(unsigned int modelMatrixLocation, glm::mat4 objectTransfromReference, int indexDataSize);
 	void setObject(Object* object, glm::vec3 position, glm::vec3 rotation);
 	glm::mat4 viewMatrix;
+	float deltaTime;
 	
 public:
 	int WindowInit();

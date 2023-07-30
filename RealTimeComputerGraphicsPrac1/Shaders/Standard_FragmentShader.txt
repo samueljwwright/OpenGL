@@ -27,5 +27,5 @@ void main()
     
 
     vec4 t = texture(tex, fragTexCoords); 
-    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s , t.a);
+    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s , (t.a + .5));
 }

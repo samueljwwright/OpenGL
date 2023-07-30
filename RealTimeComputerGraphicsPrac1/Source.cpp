@@ -38,7 +38,6 @@ int Source::WindowInit()
 
     Object* c = new Object("Monkey2", "Test2.png");
 
-
     //SHADERS
     Shader s;
     std::string VertexShaderPath = "Standard_VertexShader";
@@ -57,6 +56,11 @@ int Source::WindowInit()
 
     glLinkProgram(shaderProgram);
     glUseProgram(shaderProgram);
+
+    //enables transparency via blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 
     // VIEW MAT
@@ -90,14 +94,14 @@ int Source::WindowInit()
     float lastFrame = (float)glfwGetTime();
 
     setObject(a, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.f, 0.f, 4.f));
-
+    setObject(c, glm::vec3(.0f, .0f, .0f), glm::vec3(.0f,.0f,.0f));
 
 
     while (!glfwWindowShouldClose(window))
     {
         
         float currentFrame = (float)glfwGetTime();
-        float deltaTime = currentFrame - lastFrame;
+        deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         glClear(GL_COLOR_BUFFER_BIT);
@@ -142,6 +146,7 @@ void Source::input() {
     if (GetKeyState(A_KEY) & PRESSED_BIT_FLAG) 
     {
         viewMatrix[3][0] += 0.001;
+        //viewMatrix = glm::rotate(viewMatrix, deltaTime * -2, glm::vec3(0.0f, 1.0f, 0.0f));
     }
     if (GetKeyState(D_KEY) & PRESSED_BIT_FLAG) 
     {
