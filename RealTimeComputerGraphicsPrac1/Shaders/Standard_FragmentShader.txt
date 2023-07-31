@@ -14,18 +14,23 @@ uniform vec3 camPosition;
 
 void main()
 {
-    float lightAmbient = 0.15;
+    float lightAmbient = 0.25;
 
     vec3 normal = normalize(normals);
-    vec3 lightDirection = normalize(positions - lightPosition); 
+    vec3 lightDirection = normalize(lightPosition - positions); 
     float lightDiffuse = max(dot(normal, lightDirection), 0.0f);
 
     vec3 viewDir = normalize(camPosition - positions);
     vec3 reflectDirection = reflect(-viewDir, normal);
     float specularFactor = pow(max(dot(reflectDirection, viewDir), 0.0), 20); // 20 represents "shineness" and should be a u value taken from code
-    vec3 s =  specularFactor * lightColour.xyz * 0.5;
-    
+    vec3 s =  specularFactor * (lightColour.xyz + vec3(1.0,1.0,1.0) / 2) * 0.5; //Intesitiy
+
+    float specularFactor2 = pow(max(dot(reflectDirection, viewDir), 0.0), 0.1);
+    vec3 s2 = specularFactor * vec3(1.0,1.0,1.0) * 10;
+
+
+
 
     vec4 t = texture(tex, fragTexCoords); 
-    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s , (t.a + .5));
+    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s * s2, (t.a + .5));
 }

@@ -32,11 +32,11 @@ int Source::WindowInit()
 
     //OBJECT 1
 
-    Object* a = new Object("Cube", "test.png"); //Obj file, Texture file
+    Object* a = new Object("Hall", "hall.png"); //Obj file, Texture file
 
     //OBJECT 2
 
-    Object* c = new Object("Monkey2", "Test2.png");
+    Object* c = new Object("Monkey2", "test2.png");
 
     //SHADERS
     Shader s;
@@ -82,7 +82,7 @@ int Source::WindowInit()
     //Lighting
 
     DirectionalLight light;
-
+    
     glUniform4f(glGetUniformLocation(shaderProgram, "lightColour"), light.lightColour.x, light.lightColour.y, light.lightColour.z, light.lightColour.w);
     glUniform3f(glGetUniformLocation(shaderProgram, "lightPosition"), light.lightPosition.x, light.lightPosition.y, light.lightPosition.z);
 
@@ -91,12 +91,12 @@ int Source::WindowInit()
     glEnable(GL_DEPTH_TEST);
 
 
+    
+    //Scene setup
+    setObject(a, glm::vec3(.0f, .0f, 0.0f), glm::vec3(0.f, 3.14f/2, 0.f));
+    setObject(c, glm::vec3(-.0f, .0f, 3.0f), glm::vec3(.0f,3.14f,.0f));
+
     float lastFrame = (float)glfwGetTime();
-
-    setObject(a, glm::vec3(-3.0f, 0.0f, 0.0f), glm::vec3(0.f, 0.f, 4.f));
-    setObject(c, glm::vec3(.0f, .0f, .0f), glm::vec3(.0f,.0f,.0f));
-
-
     while (!glfwWindowShouldClose(window))
     {
         
@@ -178,6 +178,4 @@ void Source::setObject(Object* object, glm::vec3 position, glm::vec3 rotation) /
     object->transform = glm::rotate(object->transform, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     object->transform = glm::rotate(object->transform, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     object->transform = glm::rotate(object->transform, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-
 }
