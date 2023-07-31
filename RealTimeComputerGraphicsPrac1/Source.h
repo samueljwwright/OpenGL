@@ -22,8 +22,8 @@ constexpr int SPACE_KEY = 0x20;
 constexpr int PRESSED_BIT_FLAG = 0x8000; //determines if key is currently pressed
 
 struct DirectionalLight {
-	glm::vec4 lightColour = { 1.0f, .0f, 1.0f, 1.0f };
-	glm::vec4 lightPosition = { .0f, .0f, .0f, 1.0f };
+	glm::vec4 lightColour = { .8f, 1.0f, 1.0f, 1.0f };
+	glm::vec4 lightPosition = { 1.0f, 1.0f, -20.0f, 1.0f };
 };
 
 class Source 

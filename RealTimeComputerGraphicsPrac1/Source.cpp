@@ -32,11 +32,23 @@ int Source::WindowInit()
 
     //OBJECT 1
 
-    Object* a = new Object("Hall", "hall.png"); //Obj file, Texture file
+    Object* hall = new Object("Hall", "hall.png"); //Obj file, Texture file
 
     //OBJECT 2
 
-    Object* c = new Object("Monkey2", "test2.png");
+    Object* c = new Object("MultiMeshTest", "UV.png");
+
+    //OBJECT 3
+
+    Object* door = new Object("Door", "dooruv.png");
+
+    //OBJECT 4
+
+    Object* orb = new Object("orb", "orb.png");
+
+    //OBJECT 5
+
+    Object* cage = new Object("cube", "cage.png");
 
     //SHADERS
     Shader s;
@@ -66,7 +78,7 @@ int Source::WindowInit()
     // VIEW MAT
     viewMatrix = glm::lookAt(
         glm::vec3(0.0f, 0.0f, -5.0f), //Position
-        glm::vec3(0.0f, 0.0f, 0.0f), //Target 
+        glm::vec3(0.0f, -0.5f, 0.0f), //Target 
         glm::vec3(0.0f, 1.0f, 0.0f)  //up vector
     );
 
@@ -93,8 +105,14 @@ int Source::WindowInit()
 
     
     //Scene setup
-    setObject(a, glm::vec3(.0f, .0f, 0.0f), glm::vec3(0.f, 3.14f/2, 0.f));
-    setObject(c, glm::vec3(-.0f, .0f, 3.0f), glm::vec3(.0f,3.14f,.0f));
+    setObject(hall, glm::vec3(.0f, .0f, 0.0f), glm::vec3(0.f, 3.14f/2, 0.f));
+    setObject(c, glm::vec3(-2.0f, -2.0f, 6.0f), glm::vec3(.0f, 1.0f,.0f));
+
+    setObject(door, glm::vec3(-.0f, .0f, -3.0f), glm::vec3(.0f, 3.14f / 2, .0f));
+    setObject(orb, glm::vec3(.0f, -2.7f, 6.0f), glm::vec3(.0f, 3.14f / 2, .0f));
+    setObject(cage, glm::vec3(.0f, -2.7f, 6.0f), glm::vec3(.0f, 1.10f, .0f));
+
+
 
     float lastFrame = (float)glfwGetTime();
     while (!glfwWindowShouldClose(window))
@@ -115,17 +133,26 @@ int Source::WindowInit()
         unsigned int viewMatrixLocation = glGetUniformLocation(shaderProgram, "view_matrix");
         glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
         glUniform3f(glGetUniformLocation(shaderProgram, "camPosition"), viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2]);
+        
 
 
-        c->transform = glm::rotate(c->transform, deltaTime * 2, glm::vec3(2.0f, 2.0f, 0.0f));
+
+        //c->transform = glm::rotate(c->transform, deltaTime * 2, glm::vec3(0.0f, 1.0f, 0.0f));
+        orb->transform = glm::rotate(orb->transform, deltaTime * 5, glm::vec3(1.0f, 1.0f, 0.0f));
 
      
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
 
-        a->bindObject();
-        renderObject(modelMatrixLocation, a->transform, a->indexData.size());
+        hall->bindObject();
+        renderObject(modelMatrixLocation, hall->transform, hall->indexData.size());
         c->bindObject();
         renderObject(modelMatrixLocation, c->transform, c->indexData.size());
+        door->bindObject();
+        renderObject(modelMatrixLocation, door->transform, door->indexData.size());
+        orb->bindObject();
+        renderObject(modelMatrixLocation, orb->transform, orb->indexData.size());
+        cage->bindObject();
+        renderObject(modelMatrixLocation, cage->transform, cage->indexData.size());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -137,28 +164,28 @@ int Source::WindowInit()
 void Source::input() {
     if (GetKeyState(W_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][2] += 0.001;
+        viewMatrix[3][2] += 0.01;
     }
     if (GetKeyState(S_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][2] -= 0.001;
+        viewMatrix[3][2] -= 0.01;
     }
     if (GetKeyState(A_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][0] += 0.001;
+        viewMatrix[3][0] += 0.01;
         //viewMatrix = glm::rotate(viewMatrix, deltaTime * -2, glm::vec3(0.0f, 1.0f, 0.0f));
     }
     if (GetKeyState(D_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][0] -= 0.001;
+        viewMatrix[3][0] -= 0.01;
     }
     if (GetKeyState(SHIFT_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][1] += 0.001;
+        viewMatrix[3][1] += 0.01;
     }
     if (GetKeyState(SPACE_KEY) & PRESSED_BIT_FLAG) 
     {
-        viewMatrix[3][1] -= 0.001;
+        viewMatrix[3][1] -= 0.01;
     }
 }
 

@@ -1,32 +1,32 @@
 ﻿  Source.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
 C:\Users\samue\Documents\glfw-3.3.8\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(140,34): warning C4305: '+=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(167,33): warning C4305: '+=': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(144,34): warning C4305: '-=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(171,33): warning C4305: '-=': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(148,34): warning C4305: '+=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(175,33): warning C4305: '+=': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(153,34): warning C4305: '-=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(180,33): warning C4305: '-=': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(157,34): warning C4305: '+=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(184,33): warning C4305: '+=': truncation from 'double' to 'T'
           with
           [
               T=float
           ]
-C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(161,34): warning C4305: '-=': truncation from 'double' to 'T'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(188,33): warning C4305: '-=': truncation from 'double' to 'T'
           with
           [
               T=float

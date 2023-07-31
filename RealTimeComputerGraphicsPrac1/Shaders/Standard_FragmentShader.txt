@@ -25,12 +25,12 @@ void main()
     float specularFactor = pow(max(dot(reflectDirection, viewDir), 0.0), 20); // 20 represents "shineness" and should be a u value taken from code
     vec3 s =  specularFactor * (lightColour.xyz + vec3(1.0,1.0,1.0) / 2) * 0.5; //Intesitiy
 
-    float specularFactor2 = pow(max(dot(reflectDirection, viewDir), 0.0), 0.1);
-    vec3 s2 = specularFactor * vec3(1.0,1.0,1.0) * 10;
+    float specularFactor2 = pow(max(dot(reflectDirection, viewDir), 0.0), 0.01);
+    vec3 s2 = specularFactor * vec3(1.0,1.0,1.0) * 2;
 
 
 
 
     vec4 t = texture(tex, fragTexCoords); 
-    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s * s2, (t.a + .5));
+    fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s * s2, (t.a + 0.0));
 }
