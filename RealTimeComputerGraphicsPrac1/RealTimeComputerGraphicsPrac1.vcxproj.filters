@@ -70,7 +70,7 @@
     <Text Include="Shaders\Standard_FragmentShader.txt">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
-    <Text Include="cel_FragmentShader.txt">
+    <Text Include="Shaders\cel_FragmentShader.txt">
       <Filter>Resource Files\Shaders</Filter>
     </Text>
   </ItemGroup>

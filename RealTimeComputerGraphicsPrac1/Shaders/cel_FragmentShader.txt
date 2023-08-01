@@ -14,18 +14,56 @@ uniform vec3 camPosition;
 
 void main()
 {
-    vec4 t = texture(tex, fragTexCoords); 
-    
+vec4 t = texture(tex, fragTexCoords); 
+    float lightAmbient = 0.25;
 
     vec3 normal = normalize(normals);
+    vec3 lightDirection = normalize(lightPosition - positions); 
+    float lightDiffuse = max(dot(normal, lightDirection), 0.0f);
 
     vec3 viewDir = normalize(camPosition - positions);
     vec3 reflectDirection = reflect(-viewDir, normal);
     float specularFactor = pow(max(dot(reflectDirection, viewDir), 0.0), 2); // 20 represents "shineness" and should be a u value taken from code
 
-    vec3 s; 
-    
-    s = tex.xyz + (lightColour.xyz * specularFactor); //
+    vec3 s;
 
-    fragColor = vec4(s , (t.a + 0.0));
+    if(specularFactor > 0.9)
+    {
+        s =  t.xyz + (vec3(1.0, 1.0, 1.0) * 1);
+
+    }
+    else if (specularFactor > 0.7)
+    {
+        s =  t.xyz + (vec3(1.0, 1.0, 1.0) * .7);
+    }
+    else if(specularFactor > 0.5)
+    {
+        s =  t.xyz + (vec3(1.0, 1.0, 1.0) * .5);
+
+    }
+    else if(specularFactor > 0.3)
+    {
+        s =  t.xyz + (vec3(1.0, 1.0, 1.0) * .3);
+
+    }
+    else if(specularFactor > 0.1)
+    {
+        s =  t.xyz + (vec3(1.0, 1.0, 1.0) * .1);
+
+    }
+    else if(specularFactor > 0.0)
+    {
+        s =  t.xyz;
+
+    }
+    else
+    {
+        s = t.xyz + (vec3(1.0, 1.0, 1.0) * -.5);
+    }
+
+
+
+
+
+    fragColor = vec4((t.xyz) * s , (t.a + 0.0));
 }
