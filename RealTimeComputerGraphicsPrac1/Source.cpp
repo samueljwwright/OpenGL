@@ -53,7 +53,7 @@ int Source::WindowInit()
     //SHADERS
     Shader s;
     std::string VertexShaderPath = "Standard_VertexShader";
-    std::string FragmentShaderPath = "Standard_FragmentShader"; //MAKE ENUM FOR SHADERS {STANDARD> CEL> ...}
+    std::string FragmentShaderPath = "cel_FragmentShader"; //MAKE ENUM FOR SHADERS {STANDARD> CEL> ...}
 
     //Compile shaders
     unsigned int vs = s.CompileShader(GL_VERTEX_SHADER, VertexShaderPath);
