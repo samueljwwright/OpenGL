@@ -53,7 +53,7 @@ int Source::WindowInit()
     //SHADERS
     Shader s;
     std::string VertexShaderPath = "Standard_VertexShader";
-    std::string FragmentShaderPath = "Standard_FragmentShader";
+    std::string FragmentShaderPath = "cel_FragmentShader"; //MAKE ENUM FOR SHADERS {STANDARD> CEL> ...}
 
     //Compile shaders
     unsigned int vs = s.CompileShader(GL_VERTEX_SHADER, VertexShaderPath);
@@ -109,8 +109,8 @@ int Source::WindowInit()
     setObject(c, glm::vec3(-2.0f, -2.0f, 6.0f), glm::vec3(.0f, 1.0f,.0f));
 
     setObject(door, glm::vec3(-.0f, .0f, -3.0f), glm::vec3(.0f, 3.14f / 2, .0f));
-    setObject(orb, glm::vec3(.0f, -2.7f, 6.0f), glm::vec3(.0f, 3.14f / 2, .0f));
-    setObject(cage, glm::vec3(.0f, -2.7f, 6.0f), glm::vec3(.0f, 1.10f, .0f));
+    setObject(orb, glm::vec3(2.0f, -2.7f, 6.0f), glm::vec3(.0f, 3.14f / 2, .0f));
+    setObject(cage, glm::vec3(2.0f, -2.7f, 6.0f), glm::vec3(.0f, 1.10f, .0f));
 
 
 
@@ -134,11 +134,17 @@ int Source::WindowInit()
         glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
         glUniform3f(glGetUniformLocation(shaderProgram, "camPosition"), viewMatrix[3][0], viewMatrix[3][1], viewMatrix[3][2]);
         
-
+        if (GetKeyState(0x50) & PRESSED_BIT_FLAG)
+        {
+            door->transform[3][1] += 0.01;
+        }
 
 
         //c->transform = glm::rotate(c->transform, deltaTime * 2, glm::vec3(0.0f, 1.0f, 0.0f));
         orb->transform = glm::rotate(orb->transform, deltaTime * 5, glm::vec3(1.0f, 1.0f, 0.0f));
+
+
+
 
      
         unsigned int modelMatrixLocation = glGetUniformLocation(shaderProgram, "model_matrix");
@@ -187,6 +193,7 @@ void Source::input() {
     {
         viewMatrix[3][1] -= 0.01;
     }
+
 }
 
 void Source::renderObject(unsigned int modelMatrixLocation, glm::mat4 objectTransfromReference, int indexDataSize)
