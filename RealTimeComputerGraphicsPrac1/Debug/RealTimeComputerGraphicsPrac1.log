@@ -1,1 +1,39 @@
-﻿  RealTimeComputerGraphicsPrac1.vcxproj -> C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\Debug\RealTimeComputerGraphicsPrac1.exe
+﻿  Source.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.16299.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\samue\Documents\glfw-3.3.8\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(139,42): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(173,33): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(177,33): warning C4305: '-=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(181,33): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(186,33): warning C4305: '-=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(190,33): warning C4305: '+=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\RealTimeComputerGraphicsPrac1\Source.cpp(194,33): warning C4305: '-=': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+  RealTimeComputerGraphicsPrac1.vcxproj -> C:\Users\samue\source\repos\RealTimeComputerGraphicsPrac1\Debug\RealTimeComputerGraphicsPrac1.exe

@@ -14,7 +14,7 @@ uniform vec3 camPosition;
 
 void main()
 {
-    float lightAmbient = 0.25;
+    float lightAmbient = 0.15;
 
     vec3 normal = normalize(normals);
     vec3 lightDirection = normalize(lightPosition - positions); 
@@ -32,5 +32,6 @@ void main()
 
 
     vec4 t = texture(tex, fragTexCoords); 
+
     fragColor = vec4(t.xyz * lightColour.xyz * (lightDiffuse + lightAmbient) + s * s2, (t.a + 0.0));
 }

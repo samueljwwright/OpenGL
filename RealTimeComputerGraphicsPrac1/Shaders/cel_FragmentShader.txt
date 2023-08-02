@@ -51,19 +51,26 @@ vec4 t = texture(tex, fragTexCoords);
         s =  t.xyz + (vec3(1.0, 1.0, 1.0) * .1);
 
     }
-    else if(specularFactor > 0.0)
+    else if(specularFactor > 0.001)
     {
         s =  t.xyz;
 
     }
     else
     {
-        s = t.xyz + (vec3(1.0, 1.0, 1.0) * -.5);
+        s = t.xyz + (vec3(1.0, 1.0, 1.0) * -.1);
     }
 
+    
+    
+    float temp =  int(specularFactor * 10); // psuedo rounding
 
 
+    temp = int(temp) % 2 == 0 ? temp +=1 : temp; // use odd nums only
 
 
+    s = specularFactor >= 0.1 ?  t.xyz + lightColour.xyz * (temp/10) :  t.xyz + lightColour.xyz * -specularFactor; 
+ 
+    
     fragColor = vec4((t.xyz) * s , (t.a + 0.0));
 }
